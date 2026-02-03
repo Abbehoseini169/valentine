@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Be my Valentine?</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: #fff5f7;
+      color: #1f2937;
+    }
+    .card {
+      width: min(520px, 92vw);
+      background: white;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.12);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    h1 { margin: 0 0 10px; font-size: 28px; }
+    p { margin: 0 0 18px; opacity: .85; }
+    .buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      position: relative;
+      height: 64px; /* space so moving button doesn’t jump layout */
+    }
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 18px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(0,0,0,.12);
+      transition: transform .12s ease, opacity .12s ease;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    #yes {
+      background: #22c55e;
+      color: white;
+    }
+    #no {
+      background: #ef4444;
+      color: white;
+      position: absolute;
+      left: 50%;
+      transform: translateX(90px);
+    }
+    .msg {
+      margin-top: 18px;
+      font-size: 18px;
+      min-height: 28px;
+    }
+    .small {
+      font-size: 13px;
+      opacity: .6;
+      margin-top: 10px;
+    }
+    .shake {
+      animation: shake .25s linear 2;
+    }
+    @keyframes shake {
+      0% { transform: translateX(var(--x)) translateY(var(--y)) rotate(0deg); }
+      25% { transform: translateX(var(--x)) translateY(var(--y)) rotate(-3deg); }
+      50% { transform: translateX(var(--x)) translateY(var(--y)) rotate(3deg); }
+      75% { transform: translateX(var(--x)) translateY(var(--y)) rotate(-2deg); }
+      100% { transform: translateX(var(--x)) translateY(var(--y)) rotate(0deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Will you be my Valentine? 💘</h1>
+    <p>I’d love to take you out (or do something cute together). No pressure.</p>
+
+    <div class="buttons" id="area">
+      <button id="yes">Yes 💖</button>
+      <button id="no">No 🙈</button>
+    </div>
+
+    <div class="msg" id="msg"></div>
+    <div class="small">Tip: “No” is always allowed 🙂</div>
+  </div>
+
+  <script>
+  const no = document.getElementById("no");
+  const area = document.getElementById("area");
+
+  function moveNoButton() {
+    const areaRect = area.getBoundingClientRect();
+    const btnRect = no.getBoundingClientRect();
+
+    const padding = 6;
+
+    const maxX = areaRect.width - btnRect.width - padding;
+    const maxY = areaRect.height - btnRect.height - padding;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    no.style.position = "absolute";
+    no.style.left = `${x}px`;
+    no.style.top = `${y}px`;
+  }
+
+  // Desktop: jump when mouse gets close
+  no.addEventListener("mouseenter", moveNoButton);
+
+  // Mobile: jump on touch
+  no.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    moveNoButton();
+  }, { passive: false });
+</script>
+
+</body>
+</html>
