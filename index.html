@@ -1,127 +1,276 @@
 <!doctype html>
-<html lang="en">
+<html lang="sv">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Be my Valentine?</title>
+  <title>💘 En fråga…</title>
+  <meta name="theme-color" content="#ff4d6d" />
   <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: #fff5f7;
-      color: #1f2937;
+    :root{
+      --bg1:#fff1f5;
+      --bg2:#ffe6ef;
+      --card:rgba(255,255,255,.72);
+      --text:#1f2937;
+      --muted:rgba(31,41,55,.70);
+      --stroke:rgba(255,255,255,.65);
+      --shadow: 0 18px 60px rgba(15,23,42,.14);
+      --yes:#22c55e;
+      --no:#ef4444;
+      --accent:#ff4d6d;
     }
-    .card {
-      width: min(520px, 92vw);
-      background: white;
-      border-radius: 18px;
-      padding: 28px;
-      box-shadow: 0 12px 30px rgba(0,0,0,.12);
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background: radial-gradient(1200px 700px at 20% 10%, var(--bg2), transparent 60%),
+                  radial-gradient(900px 600px at 80% 30%, #ffe3f1, transparent 55%),
+                  linear-gradient(180deg, var(--bg1), #ffffff);
+      display:grid;
+      place-items:center;
+      padding:24px;
+      overflow:hidden;
     }
-    h1 { margin: 0 0 10px; font-size: 28px; }
-    p { margin: 0 0 18px; opacity: .85; }
-    .buttons {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 10px;
-      position: relative;
-      height: 64px; /* space so moving button doesn’t jump layout */
+
+    /* flytande hjärtan i bakgrunden */
+    .hearts{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.25;
+      filter: blur(.2px);
     }
-    button {
-      border: 0;
+    .heart{
+      position:absolute;
+      font-size:22px;
+      animation: floatUp linear infinite;
+      transform: translateY(120vh);
+    }
+    @keyframes floatUp{
+      from{ transform: translateY(120vh) translateX(0) rotate(0deg); }
+      to  { transform: translateY(-20vh) translateX(40px) rotate(18deg); }
+    }
+
+    .wrap{
+      width:min(560px, 96vw);
+      position:relative;
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.55);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 28px 24px;
+      overflow:hidden;
+    }
+
+    .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,.65);
+      border: 1px solid rgba(255,255,255,.65);
+      color: rgba(31,41,55,.8);
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(255,77,109,.18);
+    }
+
+    h1{
+      margin: 0 0 10px;
+      font-size: clamp(26px, 4vw, 34px);
+      letter-spacing:-.02em;
+      line-height:1.12;
+    }
+    p{
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .buttons{
+      position:relative;
+      height:64px;
+      margin-top: 14px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:12px;
+    }
+
+    button{
+      border:0;
       border-radius: 999px;
       padding: 14px 18px;
       font-size: 16px;
+      font-weight: 650;
       cursor: pointer;
-      box-shadow: 0 8px 16px rgba(0,0,0,.12);
-      transition: transform .12s ease, opacity .12s ease;
-      user-select: none;
+      box-shadow: 0 10px 24px rgba(15,23,42,.12);
+      transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+      user-select:none;
       touch-action: manipulation;
     }
-    #yes {
-      background: #22c55e;
-      color: white;
+    button:active{ transform: translateY(1px) scale(.99); }
+    button:hover{ filter: brightness(1.02); box-shadow: 0 12px 28px rgba(15,23,42,.14); }
+
+    #yes{
+      background: linear-gradient(180deg, rgba(255,255,255,.15), rgba(0,0,0,.06)), var(--yes);
+      color:white;
     }
-    #no {
-      background: #ef4444;
-      color: white;
-      position: absolute;
-      left: 50%;
-      transform: translateX(90px);
+
+    #no{
+        background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.08)), var(--no);
+        color:white;
+        position:absolute;
+        left: 0;
+        top: 0;
+        transform: translate3d(0px, 0px, 0);
+        will-change: transform;
     }
-    .msg {
+
+
+    .msg{
       margin-top: 18px;
-      font-size: 18px;
-      min-height: 28px;
+      min-height: 30px;
+      font-size: 17px;
+      font-weight: 600;
     }
-    .small {
-      font-size: 13px;
-      opacity: .6;
+    .hint{
       margin-top: 10px;
+      font-size: 12.5px;
+      color: rgba(31,41,55,.55);
     }
-    .shake {
-      animation: shake .25s linear 2;
+
+    /* liten konfetti-look (enkelt) */
+    .confetti{
+      position:absolute;
+      inset:-40px;
+      pointer-events:none;
+      opacity:0;
+      transition: opacity .25s ease;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255,77,109,.35) 0 6px, transparent 7px),
+        radial-gradient(circle at 80% 30%, rgba(34,197,94,.30) 0 7px, transparent 8px),
+        radial-gradient(circle at 30% 80%, rgba(99,102,241,.25) 0 6px, transparent 7px),
+        radial-gradient(circle at 70% 75%, rgba(249,115,22,.22) 0 7px, transparent 8px);
+      filter: blur(.2px);
     }
-    @keyframes shake {
-      0% { transform: translateX(var(--x)) translateY(var(--y)) rotate(0deg); }
-      25% { transform: translateX(var(--x)) translateY(var(--y)) rotate(-3deg); }
-      50% { transform: translateX(var(--x)) translateY(var(--y)) rotate(3deg); }
-      75% { transform: translateX(var(--x)) translateY(var(--y)) rotate(-2deg); }
-      100% { transform: translateX(var(--x)) translateY(var(--y)) rotate(0deg); }
+    .confetti.on{ opacity:1; }
+
+    @media (max-width:420px){
+      .card{ padding: 24px 18px; }
+      button{ padding: 13px 16px; font-size: 15px; }
+      .buttons{ height:72px; }
+      #no{ top:12px; }
     }
   </style>
 </head>
+
 <body>
-  <div class="card">
-    <h1>Will you be my Valentine? 💘</h1>
-    <p>I’d love to take you out (or do something cute together). No pressure.</p>
+  <!-- bakgrundshjärtan -->
+  <div class="hearts" aria-hidden="true">
+    <div class="heart" style="left:10%; animation-duration:12s; animation-delay:-2s;">💗</div>
+    <div class="heart" style="left:24%; animation-duration:15s; animation-delay:-7s; font-size:18px;">💖</div>
+    <div class="heart" style="left:40%; animation-duration:13s; animation-delay:-4s; font-size:20px;">💘</div>
+    <div class="heart" style="left:58%; animation-duration:16s; animation-delay:-9s; font-size:19px;">💞</div>
+    <div class="heart" style="left:72%; animation-duration:14s; animation-delay:-6s; font-size:22px;">💓</div>
+    <div class="heart" style="left:86%; animation-duration:17s; animation-delay:-11s; font-size:18px;">💝</div>
+  </div>
 
-    <div class="buttons" id="area">
-      <button id="yes">Yes 💖</button>
-      <button id="no">No 🙈</button>
+  <div class="wrap">
+    <div class="card">
+      <div class="confetti" id="confetti"></div>
+
+      <div class="badge">
+        <span class="dot"></span>
+        <span>En liten fråga…</span>
+      </div>
+
+      <h1>Vill du vara min Valentine? 💘</h1>
+      <p>
+        Jag skulle gärna ta dig på en mysig dejt (eller bara hitta på något kul tillsammans).
+        Inget press — bara en söt fråga 🙂
+      </p>
+
+      <div class="buttons" id="area">
+        <button id="yes">Ja 💖</button>
+        <button id="no">Nej 🙈</button>
+      </div>
+
+      <div class="msg" id="msg"></div>
+      <div class="hint">Tips: Försök att klcika på nej haha</div>
     </div>
-
-    <div class="msg" id="msg"></div>
-    <div class="small">Tip: “No” is always allowed 🙂</div>
   </div>
 
   <script>
+  const yes = document.getElementById("yes");
   const no = document.getElementById("no");
   const area = document.getElementById("area");
+  const msg = document.getElementById("msg");
+  const confetti = document.getElementById("confetti");
+
+  let answered = false;
+  let cooldown = false;
 
   function moveNoButton() {
-    const areaRect = area.getBoundingClientRect();
-    const btnRect = no.getBoundingClientRect();
+    if (answered || cooldown) return;
+
+    cooldown = true;
+    setTimeout(() => (cooldown = false), 80);
+
+    const areaW = area.clientWidth;
+    const areaH = area.clientHeight;
+
+    const btnW = no.offsetWidth;
+    const btnH = no.offsetHeight;
 
     const padding = 6;
 
-    const maxX = areaRect.width - btnRect.width - padding;
-    const maxY = areaRect.height - btnRect.height - padding;
+    const maxX = Math.max(0, areaW - btnW - padding);
+    const maxY = Math.max(0, areaH - btnH - padding);
 
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
+    const x = padding + Math.random() * maxX;
+    const y = padding + Math.random() * maxY;
 
-    no.style.position = "absolute";
-    no.style.left = `${x}px`;
-    no.style.top = `${y}px`;
+    no.style.transform = `translate3d(${x}px, ${y}px, 0)`;
   }
 
-  // Desktop: jump when mouse gets close
-  no.addEventListener("mouseenter", moveNoButton);
+  /* NEJ – hoppar undan men går att klicka */
+  no.addEventListener("pointerenter", moveNoButton);
 
-  // Mobile: jump on touch
-  no.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    moveNoButton();
-  }, { passive: false });
+  no.addEventListener("pointerdown", (e) => {
+    // låt click fortfarande kunna ske ibland
+    if (!answered) {
+      e.preventDefault();
+      moveNoButton();
+    }
+  });
+
+  no.addEventListener("click", () => {
+    if (answered) return;
+    answered = true;
+    msg.textContent = "Okej 🙂 Tack för att du svarade ärligt.";
+  });
+
+  /* JA – funkar alltid */
+  yes.addEventListener("click", () => {
+    if (answered) return;
+    answered = true;
+    msg.textContent = "Yesss 💖 Säg bara när du kan!";
+    confetti.classList.add("on");
+  });
 </script>
 
 </body>
